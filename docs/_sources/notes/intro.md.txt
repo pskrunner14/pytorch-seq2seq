@@ -1,17 +1,12 @@
-# pytorch-seq2seq
-
-[![Build Status](https://travis-ci.org/IBM/pytorch-seq2seq.svg?branch=master)](https://travis-ci.org/IBM/pytorch-seq2seq)
-[![Join the chat at https://gitter.im/pytorch-seq2seq/Lobby](https://badges.gitter.im/pytorch-seq2seq/Lobby.svg)](https://gitter.im/pytorch-seq2seq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-**[Documentation](https://ibm.github.io/pytorch-seq2seq/public/index.html)**
+# Introduction
 
 **pytorch-seq2seq** is a simple, efficient and scalable framework implemented in [PyTorch](http://pytorch.org), to get you up and running in no time on sequence-to-sequence learning tasks.  The framework has modularized and extensible components for seq2seq models, training and inference, checkpoints, etc.  This is an alpha release. We appreciate any kind of feedback or contribution.
-
 
 # What's New in 0.1.7
 
 * Compatible with PyTorch 0.4.1
 * Added support for pre-trained word embedding
+* Minor Bug fixes
 
 # Roadmap
 Sequence to sequence learning is a fast evolving space with new techniques and architectures being published frequently.  The goal of this library is facilitating the development of such techniques and applications.  While constantly improving the quality of code and documentation, we will focus on the following items:
@@ -70,41 +65,18 @@ Checkpoints are organized by experiments and timestamps as shown in the followin
 
 The sample script by default saves checkpoints in the `experiment` folder of the root directory.  Look at the usages of the sample code for more options, including resuming and loading from checkpoints.
 
-# Benchmarks
-
-* WMT Machine Translation (Coming soon)
-
 # Troubleshoots and Contributing
-If you have any questions, bug reports, and feature requests, please [open an issue](https://github.com/IBM/pytorch-seq2seq/issues/new) and make sure to use labels, to make everyone's life easier.  For live discussions, please go to our [Gitter lobby](https://gitter.im/pytorch-seq2seq/Lobby).
+If you have any questions, bug reports, and feature requests, please [open an issue](https://github.com/IBM/pytorch-seq2seq/issues/new).  For live discussions, please go to our [Gitter lobby](https://gitter.im/pytorch-seq2seq/Lobby).
 
-We appreciate any kind of feedback or contribution.  Feel free to proceed with small issues like questions, bug fixes and documentation improvement.  For major contributions and new features, please discuss with the collaborators in corresponding issues.  
-
-### Development Cycle
-We are using 4-week release cycles, where during each cycle changes will be pushed to the `develop` branch and finally merge to the `master` branch at the end of each cycle.
+We appreciate any kind of feedback or contribution.  Feel free to proceed with small issues like questions, bug fixes and documentation improvement.  For major contributions and new features, please discuss with the collaborators in corresponding issues.
 
 ### Development Environment
-We setup the development environment using [Vagrant](https://www.vagrantup.com/).  To get started, make sure that you have [VirtualBox](https://www.virtualbox.org/) installed on your system, then run `vagrant up` with our 'Vagrantfile', once the VM has been provisioned you can `vagrant ssh` into it and start moving things around, albeit in moderation.
-
-The following tools are needed and installed in the development environment by default:
-* Git
-* Python 2.7
-* Python packages: pytorch, torchtext, nose, mock, coverage, flake8
+We setup the development environment using [Vagrant](https://www.vagrantup.com/).  To get started, make sure that you have [VirtualBox](https://www.virtualbox.org/) installed on your system, then run `vagrant up` with our 'Vagrantfile'.
 
 [Docker](https://www.docker.com/) support for development coming soon.
 
 ### Test
 The quality and the maintainability of the project is ensured by comprehensive tests.  We encourage writing unit tests and integration tests when contributing new codes.
 
-Locally please run `nosetests` in the package root directory to run unit tests.  We use TravisCI to require that a pull request has to pass all unit tests to be eligible to merge.  See [travis configuration](https://github.com/IBM/pytorch-seq2seq/blob/master/.travis.yml) for more information.
-
 ### Code Style
-We follow [PEP8](https://www.python.org/dev/peps/pep-0008/) for code style.  Especially the style of docstrings is important to generate documentation.
-
-* *Local*: Run the following commands in the package root directory
-```
-# Python syntax errors or undefined names
-flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
-# Style checks
-flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-```
-* *Github*: We use [Codacy](https://www.codacy.com) to check styles on pull requests and branches.
+We follow [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) for code style.  Especially the style of docstrings is important to generate documentation.
