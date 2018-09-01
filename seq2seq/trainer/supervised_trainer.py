@@ -26,7 +26,7 @@ class SupervisedTrainer(object):
         checkpoint_every (int, optional): number of batches to checkpoint after, (default: 100)
     """
     def __init__(self, expt_dir='experiment', loss=NLLLoss(), batch_size=64,
-                 random_seed=None, checkpoint_every=100, print_every=100):
+                 multi_gpu=False, random_seed=None, checkpoint_every=100, print_every=100):
         self._trainer = "Simple Trainer"
         self.random_seed = random_seed
         if random_seed is not None:
@@ -37,6 +37,7 @@ class SupervisedTrainer(object):
         self.optimizer = None
         self.checkpoint_every = checkpoint_every
         self.print_every = print_every
+        self.multi_gpu = multi_gpu
 
         if not os.path.isabs(expt_dir):
             expt_dir = os.path.join(os.getcwd(), expt_dir)
@@ -67,6 +68,9 @@ class SupervisedTrainer(object):
     def _train_epoches(self, data, model, n_epochs, start_epoch, start_step,
                        dev_data=None, teacher_forcing_ratio=0):
         log = self.logger
+
+        if self.multi_gpu and torch.cuda.is_available():
+            model = torch.nn.DataParallel(model)
 
         print_loss_total = 0  # Reset every print_every
         epoch_loss_total = 0  # Reset every epoch

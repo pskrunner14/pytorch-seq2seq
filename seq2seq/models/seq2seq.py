@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -33,8 +34,12 @@ class Seq2seq(nn.Module):
 
     """
 
-    def __init__(self, encoder, decoder, decode_function=F.log_softmax):
+    def __init__(self, encoder, decoder, decode_function=F.log_softmax, 
+                 multi_gpu=False, gpu_ids=None):
         super(Seq2seq, self).__init__()
+        if multi_gpu and torch.cuda.is_available():
+            encoder = nn.DataParallel(encoder)
+            decoder = nn.DataParallel(decoder)
         self.encoder = encoder
         self.decoder = decoder
         self.decode_function = decode_function

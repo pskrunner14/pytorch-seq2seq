@@ -91,21 +91,23 @@ else:
     loss = Perplexity(weight, pad)
     if torch.cuda.is_available():
         loss.cuda()
+        multi_gpu = True
 
     seq2seq = None
     optimizer = None
     if not opt.resume:
+
         # Initialize model
         hidden_size=128
         bidirectional = True
         encoder = EncoderRNN(len(src.vocab), max_len, hidden_size,
                              bidirectional=bidirectional, variable_lengths=True)
+        
         decoder = DecoderRNN(len(tgt.vocab), max_len, hidden_size * 2 if bidirectional else hidden_size,
                              dropout_p=0.2, use_attention=True, bidirectional=bidirectional,
                              eos_id=tgt.eos_id, sos_id=tgt.sos_id)
-        seq2seq = Seq2seq(encoder, decoder)
-        if torch.cuda.is_available():
-            seq2seq.cuda()
+
+        seq2seq = Seq2seq(encoder, decoder, multi_gpu=multi_gpu)
 
         for param in seq2seq.parameters():
             param.data.uniform_(-0.08, 0.08)
@@ -119,7 +121,7 @@ else:
 
     # train
     t = SupervisedTrainer(loss=loss, batch_size=32,
-                          checkpoint_every=50,
+                          checkpoint_every=50, multi_gpu=multi_gpu,
                           print_every=10, expt_dir=opt.expt_dir)
 
     seq2seq = t.train(seq2seq, train,
