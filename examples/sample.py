@@ -19,6 +19,16 @@ from seq2seq.util.checkpoint import Checkpoint
 
 LOG_FORMAT = '%(asctime)s:%(name)s:%(levelname)s: %(message)s'
 
+"""
+Run example using:
+
+$ TRAIN_SRC=data/toy_reverse/train/src.txt
+$ TRAIN_TGT=data/toy_reverse/train/tgt.txt
+$ DEV_SRC=data/toy_reverse/dev/src.txt
+$ DEV_TGT=data/toy_reverse/dev/tgt.txt
+$ python examples/sample.py $TRAIN_SRC $TRAIN_TGT $DEV_SRC $DEV_TGT
+"""
+
 
 @click.command()
 @click.argument('train-source')
@@ -48,16 +58,8 @@ LOG_FORMAT = '%(asctime)s:%(name)s:%(levelname)s: %(message)s'
     default='info',
     help='logging level',
 )
-def sample(
-        train_source,
-        train_target,
-        dev_source,
-        dev_target,
-        experiment_directory,
-        checkpoint,
-        resume,
-        log_level,
-):
+def sample(train_source, train_target, dev_source, dev_target,
+           experiment_directory, checkpoint, resume, log_level):
     """
     # Sample usage
 
@@ -129,14 +131,8 @@ def load_checkpoint(experiment_directory, checkpoint):
     return seq2seq, input_vocab, output_vocab
 
 
-def train_model(
-        train_source,
-        train_target,
-        dev_source,
-        dev_target,
-        experiment_directory,
-        resume=False,
-):
+def train_model(train_source, train_target, dev_source,
+                dev_target, experiment_directory, resume=False):
     # Prepare dataset
     train = Seq2SeqDataset.from_file(train_source, train_target)
     train.build_vocab(50000, 50000)
@@ -164,7 +160,7 @@ def train_model(
     # Train
     trainer = SupervisedTrainer(
         loss=loss,
-        batch_size=512,
+        batch_size=64,
         checkpoint_every=50,
         print_every=10,
         experiment_directory=experiment_directory,
@@ -174,7 +170,7 @@ def train_model(
         seq2seq = trainer.train(
             seq2seq,
             train,
-            n_epochs=2,
+            n_epochs=5,
             dev_data=dev,
             optimizer=optimizer,
             teacher_forcing_ratio=0.5,
@@ -189,15 +185,8 @@ def train_model(
     return seq2seq, input_vocab, output_vocab
 
 
-def initialize_model(
-        train,
-        input_vocab,
-        output_vocab,
-        max_len=50,
-        hidden_size=128,
-        dropout_p=0,
-        bidirectional=True,
-):
+def initialize_model(train, input_vocab, output_vocab, max_len=50,
+                     hidden_size=256, dropout_p=0, bidirectional=True):
     # Initialize model
     encoder = EncoderRNN(
         len(input_vocab),
